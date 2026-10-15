@@ -27,6 +27,7 @@ Build for today's needs, architect a bridge to agent readiness, and preserve opt
 - [Provisional OSS component register](docs/oss-component-register.md)
 - [Product adoption matrix](docs/product-adoption-matrix.md)
 - [Phased roadmap](docs/roadmap.md)
+- [AI Gateway pilot plan](docs/ai-gateway-pilot-plan.md) — proposed first implementation pilot
 - [Architecture Decision Record template](docs/adr-template.md)
 - [Contributing and change control](CONTRIBUTING.md)
 
