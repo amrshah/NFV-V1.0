@@ -140,9 +140,27 @@ Do not claim a fallback works until automated tests deliberately make the primar
 - NFV critical gates are evidenced; the weighted score is not used to hide a failed gate.
 - A short ADR records exact version, license review, deployment decision and exit path.
 
+## Existing Alamia codebase finding (initial read-only inspection)
+
+The private repository [AlamiaSoft/AlamiaAICopilot-Starter](https://github.com/AlamiaSoft/AlamiaAICopilot-Starter) already contains:
+- `core/ai/provider.py`: an `AIModelProvider` abstraction with chat, streaming, structured-output and tool-calling methods.
+- `docs/ai-provider-adapter.md`: describes an `AIModelRouter` that selects providers from requirements such as quality, local-only privacy and tool-calling needs.
+- Its architecture separates the Copilot runtime from AI provider adapters and says core should not depend on a particular LLM.
+
+This changes the implementation question. **Do not build a second custom router inside the gateway project.** The pilot should evaluate whether a separate shared service (LiteLLM or another candidate) adds enough central value—cross-product keys, budgets, usage/cost attribution, provider failover and operations—to justify another network hop and service to operate.
+
+Recommended boundary:
+- Keep `AIModelProvider` / `AIModelRouter` as the Copilot's in-process abstraction for provider capability selection and a testable local/mock path.
+- If the shared gateway trial passes, implement one provider adapter/client in the Copilot Starter that calls the gateway's stable API.
+- Keep product business rules, tenant-data authorization and tool permissions inside the consuming application.
+- Avoid competing retry/fallback loops at both layers. Assign routing/retry ownership explicitly and test that it cannot create retry storms or duplicate spend.
+- Inspect the current router implementation, provider adapters, tests and actual consuming-app requirements. A README test claim is not a substitute for running tests against the current commit.
+
+This is an initial tree/document/code inspection, not a full repository audit or a claim that the existing router is production-ready.
+
 ## Suggested implementation sequence
 
-1. **Inspect existing work first:** locate any existing AI Gateway starter/repository and compare it with this plan; do not duplicate it or start a competing repo.
+1. Inspect the current Copilot Starter router/provider code and tests, plus any existing AI Gateway starter/repositories; do not duplicate work or start a competing repo.
 2. Define the minimal Alamia request/response contract and threat/data-flow model.
 3. Trial LiteLLM in a disposable environment with pinned version; measure resources and verify licensing/dependencies.
 4. Configure one primary route and one fallback; add tests that force each failure mode.
