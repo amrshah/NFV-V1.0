@@ -30,7 +30,9 @@ Build for today's needs, architect a bridge to agent readiness, and preserve opt
 - [OSS-first selection policy](docs/oss-selection-policy.md)
 - [Provisional OSS component register](docs/oss-component-register.md)
 - [Product adoption matrix](docs/product-adoption-matrix.md)
-- [Phased roadmap](docs/roadmap.md)
+- [Phased NFV adoption roadmap](docs/roadmap.md)
+- [Decision-driven productization roadmap](docs/productization-roadmap.md) — Taliya is a candidate for bounded private-alpha validation, not a public launch commitment
+- [DEC-2026-001: Taliya private alpha readiness](docs/decisions/taliya-copilot-private-alpha.md)
 - [AI Gateway pilot plan](docs/ai-gateway-pilot-plan.md) — candidate pilot, not an approved build commitment
 - [AI Gateway repository inventory](docs/ai-gateway-repository-inventory.md) — existing bridge assets and initial security finding
 - [ADR-0001: AI Gateway pilot](docs/adr/0001-ai-gateway-first-nfv-pilot.md) — proposed pilot decision, implementation engine not selected
