@@ -29,6 +29,7 @@ Build for today's needs, architect a bridge to agent readiness, and preserve opt
 - [Phased roadmap](docs/roadmap.md)
 - [AI Gateway pilot plan](docs/ai-gateway-pilot-plan.md) — proposed first implementation pilot
 - [AI Gateway repository inventory](docs/ai-gateway-repository-inventory.md) — existing bridge assets and initial security finding
+- [ADR-0001: AI Gateway pilot](docs/adr/0001-ai-gateway-first-nfv-pilot.md) — selects the pilot, not yet the implementation engine
 - [Architecture Decision Record template](docs/adr-template.md)
 - [Contributing and change control](CONTRIBUTING.md)
 
