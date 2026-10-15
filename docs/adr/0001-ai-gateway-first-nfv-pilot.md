@@ -1,6 +1,6 @@
-# ADR-0001: Select Alamia AI Gateway as First NFV Pilot
+# ADR-0001: Evaluate Alamia AI Gateway as an NFV Pilot Candidate
 
-- **Status:** Accepted for pilot selection; implementation engine undecided
+- **Status:** Proposed / not approved for implementation; candidate requires portfolio comparison
 - **Date:** 2026-10-15
 - **Decision owner:** AlamiaSoft engineering
 - **Affected products:** Alamia AI Gateway, AlamiaAICopilot-Starter, prospective Kamal Express / Alamia Accounts integrations
@@ -16,9 +16,9 @@ Existing code was found:
 - `AlamiaSoft/VPS-AI-Bridge-Standalone` is an OpenAI-compatible FastAPI prototype. Initial source review found no visible authentication on model endpoints, no visible runtime provider failover after upstream failure, broad error wrapping, unpinned dependencies and no tests in the inspected tree.
 - `AlamiaSoft/alamia-ai-hub` contains a Cloudflare-specific service file with a hardcoded token in source. Treat as potential credential exposure and rotate/revoke if valid; see [repository inventory](../ai-gateway-repository-inventory.md).
 
-## Decision
+## Provisional position (not a commitment)
 
-Select **Alamia AI Gateway as the first NFV pilot**, but do not yet select an implementation engine or create another gateway repository. First compare:
+Alamia AI Gateway remains a **candidate** because it may be reusable across multiple AI-capable products. It is not selected as the first implementation pilot until the NFV decision-and-learning loop has compared it against other candidates and near-term commitments. Do not create another gateway repository yet. If it remains in contention, compare:
 1. A small, secured adaptation of the existing FastAPI bridge.
 2. LiteLLM OSS as the routing/proxy engine behind an Alamia-owned contract.
 3. The existing Copilot in-process router for local/mock and capability selection.
