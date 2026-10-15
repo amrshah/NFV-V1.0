@@ -8,10 +8,23 @@
 
 | Repository | What initial inspection indicates | Initial disposition | What must be verified |
 |---|---|---|---|
-| [amrshah/Alamia-AI-Bridge](https://github.com/amrshah/Alamia-AI-Bridge) | README describes a universal provider bridge for OpenRouter, Groq, SambaNova and Ollama; model aliases and fallback logic. Tree query showed README as the only path matching gateway/provider/router/model/usage-related terms, so inspect the full tree before conclusions. | **Inspect / possibly consolidate** | Actual implementation files, tests, auth, usage records, budgets, timeout/retry behavior, error handling, model capability differences, deployment and license. |
-| [AlamiaSoft/VPS-AI-Bridge-Standalone](https://github.com/AlamiaSoft/VPS-AI-Bridge-Standalone) | README describes a lightweight FastAPI OpenAI-compatible proxy with aliases and provider fallback. | **Strong prototype candidate** | Full source, test coverage, client authentication (README example suggests a dummy key may be ignored—must verify and fix before any shared deployment), request limits, attribution, usage/cost logging, secrets, retries, resource footprint and license. |
+| [amrshah/Alamia-AI-Bridge](https://github.com/amrshah/Alamia-AI-Bridge) | `bridge.py` is a CLI-oriented helper, not an HTTP gateway. It routes aliases to OpenRouter/Groq/SambaNova and has some provider-selection fallback, but returns errors as strings and writes output to `bridge_result.txt`. | **Reuse small ideas only / inspect** | No server/API, auth, metering, budgets, tests or production failure semantics were evident in the inspected file. Verify license and tests if any before reuse. |
+| [AlamiaSoft/VPS-AI-Bridge-Standalone](https://github.com/AlamiaSoft/VPS-AI-Bridge-Standalone) | `server.py` exposes OpenAI-compatible endpoints and aliases via FastAPI. Initial source review found no authentication check on `/v1/chat/completions` or `/v1/models`; route selection chooses a provider but does not appear to retry a different provider after an upstream runtime failure; JSON error handling appears to convert upstream failures to HTTP 500; streaming errors are emitted as SSE data. The inspected tree had no tests and requirements are unpinned. | **Prototype only; not production-ready** | Add auth/identity, quotas/rate limits, proper status/error semantics, real tested failover, request limits, usage/cost attribution, structured/redacted logs, dependency pins/scanning, tests and deployment hardening. Verify license. |
 | [AlamiaSoft/alamia-ai-hub](https://github.com/AlamiaSoft/alamia-ai-hub) | Found a Cloudflare-specific frontend service using Workers AI through an AI Gateway route. | **Inspect separately; not automatically the shared gateway** | Scope, API boundaries, environment/secret management, deployment and whether this is product-specific UI code rather than a general provider gateway. |
 | [AlamiaSoft/AlamiaAICopilot-Starter](https://github.com/AlamiaSoft/AlamiaAICopilot-Starter) | `core/ai/provider.py` defines `AIModelProvider`; `docs/ai-provider-adapter.md` describes `AIModelRouter` and selection requirements. Architecture separates provider adapters from the Copilot core. | **Keep as consumer abstraction; add adapter if gateway proves useful** | Actual router/provider implementations, test results, provider capability handling and current consumers. Avoid duplicate retry/fallback loops. |
+
+## Source-level findings from initial code inspection
+
+### VPS-AI-Bridge-Standalone
+The following are findings from the current `server.py` and repository tree, not runtime test results:
+- No auth dependency/middleware is visible on the model endpoints. Do not expose this service to the internet or trusted multi-product network until authenticated access is enforced.
+- Alias-based provider selection is present, but no runtime failover to a second provider is visible after the selected upstream fails. README fallback claims need a failure-injection test.
+- JSON upstream errors appear to be wrapped as HTTP 500 by broad exception handling, which obscures provider status and failure class.
+- The stream path logs upstream error bodies and sends error details to clients; sanitize logs and normalize errors.
+- No tests were visible in the inspected repository tree, and dependency versions are not pinned.
+
+### Alamia-AI-Bridge
+The inspected `bridge.py` is a CLI helper rather than a server; it has no shared API, tenant/client auth, metering or budget control. Treat it as a source of small routing ideas, not as a deployable shared gateway.
 
 ## Security finding — urgent
 
